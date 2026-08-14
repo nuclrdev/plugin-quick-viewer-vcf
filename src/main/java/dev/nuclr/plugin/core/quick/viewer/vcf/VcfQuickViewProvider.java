@@ -1,7 +1,5 @@
 package dev.nuclr.plugin.core.quick.viewer.vcf;
 
-import java.io.IOException;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JComponent;
@@ -27,7 +25,6 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 	private NuclrResource currentResource;
 	private AtomicBoolean currentCancelled;
 
-	private final String version = loadVersion();
 
 	@Override
 	public JComponent panel() {
@@ -65,10 +62,6 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 		return VcfFileSupport.supports(resource);
 	}
 
-	@Override
-	public int priority() {
-		return 30;
-	}
 
 	@Override
 	public boolean openResource(NuclrResource resource, AtomicBoolean cancelled) {
@@ -131,70 +124,10 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 	// ── Plugin metadata ──────────────────────────────────────────────────────────
 
 	@Override
-	public String id() {
-		return ID;
-	}
-
-	@Override
 	public String uuid() {
 		return ID;
 	}
 
-	@Override
-	public String name() {
-		return "vCard Quick Viewer";
-	}
 
-	@Override
-	public String version() {
-		return version;
-	}
 
-	@Override
-	public String description() {
-		return "Renders vCard (.vcf) contact files as readable contact cards.";
-	}
-
-	@Override
-	public String author() {
-		return "Nuclr Development Team";
-	}
-
-	@Override
-	public String license() {
-		return "Apache-2.0";
-	}
-
-	@Override
-	public String website() {
-		return "https://nuclr.dev";
-	}
-
-	@Override
-	public String pageUrl() {
-		return "https://nuclr.dev/plugins/core/vcf-quick-viewer.html";
-	}
-
-	@Override
-	public String docUrl() {
-		return "https://nuclr.dev/plugins/core/vcf-quick-viewer.html";
-	}
-
-	@Override
-	public Developer developer() {
-		return Developer.Official;
-	}
-
-	private static String loadVersion() {
-		try (var stream = VcfQuickViewProvider.class.getResourceAsStream("/plugin.properties")) {
-			if (stream == null) {
-				return "unknown";
-			}
-			Properties props = new Properties();
-			props.load(stream);
-			return props.getProperty("version", "unknown");
-		} catch (IOException e) {
-			return "unknown";
-		}
-	}
 }
