@@ -1,5 +1,7 @@
 package dev.nuclr.plugin.core.quick.viewer.vcf;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JComponent;
@@ -8,6 +10,8 @@ import dev.nuclr.platform.NuclrThemeScheme;
 import dev.nuclr.platform.plugin.NuclrPluginContext;
 import dev.nuclr.platform.plugin.NuclrResource;
 import dev.nuclr.platform.plugin.QuickViewNuclrPlugin;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -72,6 +76,42 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 		currentCancelled = cancelled;
 		panel();
 		return panel.load(resource, cancelled);
+	}
+
+	@Override
+	public boolean supportsThumbnails() {
+		return true;
+	}
+
+	/**
+	 * The first contact's avatar, as the card shows it: their photo in a circle,
+	 * or their initials on a colour derived from the name.
+	 */
+	@Override
+	public BufferedImage thumbnail(NuclrResource resource, int maxWidth, int maxHeight, AtomicBoolean cancelled) {
+		if (maxWidth <= 0 || maxHeight <= 0 || !supports(resource)
+				|| resource.getLength() > VcfQuickViewPanel.MAX_FILE_SIZE) {
+			return null;
+		}
+		try (var in = resource.openInputStream()) {
+			VCard card = Ezvcard.parse(in).first();
+			if (card == null || (cancelled != null && cancelled.get())) {
+				return null;
+			}
+			Contact contact = Contact.from(card);
+			int size = Math.min(maxWidth, maxHeight);
+			BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = image.createGraphics();
+			try {
+				new AvatarIcon(contact.photo(), contact.displayName(), size, null).paintIcon(null, g, 0, 0);
+			} finally {
+				g.dispose();
+			}
+			return image;
+		} catch (Exception e) {
+			log.debug("No thumbnail for {}: {}", resource.getName(), e.toString());
+			return null;
+		}
 	}
 
 	@Override

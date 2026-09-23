@@ -27,6 +27,12 @@ contacts as styled cards instead of raw text.
 Files with another extension are still accepted when their content starts with
 `BEGIN:VCARD`.
 
+## 🖼️ Thumbnail
+
+The first contact's avatar as the card shows it: their photo in a circle, or their initials on a colour derived from the name - square, sized to the shorter side of the box, on a transparent background.
+
+It implements the platform SDK 6.0.0 thumbnail methods, so plugins that want a picture of a file - attachment chips in AI Projects, for one - get it through Commander.
+
 ## 📥 Installation
 
 Copy the signed plugin archive and detached signature into the Nuclr Commander `plugins/` directory:
@@ -64,7 +70,7 @@ src/main/java/dev/nuclr/plugin/core/quick/viewer/vcf/
 
 | Library | Version | Purpose |
 |---|---|---|
-| `dev.nuclr:platform-sdk` | `3.0.2` | Nuclr platform interfaces |
+| `dev.nuclr:platform-sdk` | `6.0.0` | Nuclr platform interfaces |
 | [`ez-vcard`](https://github.com/mangstadt/ez-vcard) | `0.12.2` | vCard parsing |
 
 ## 📜 License

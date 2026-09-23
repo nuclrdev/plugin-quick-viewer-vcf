@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VcfQuickViewPanel extends JPanel {
 
 	/** Hard caps so a hostile or huge file can never exhaust memory / the EDT. */
-	private static final long MAX_FILE_SIZE = 16L * 1024 * 1024; // 16 MB
+	static final long MAX_FILE_SIZE = 16L * 1024 * 1024; // 16 MB
 	private static final int MAX_CONTACTS = 2000;
 
 	private final JPanel content;
