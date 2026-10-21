@@ -1,5 +1,7 @@
 package dev.nuclr.plugin.core.quick.viewer.vcf;
 
+import static dev.nuclr.plugin.core.quick.viewer.vcf.Messages.tr;
+
 import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
@@ -102,7 +104,7 @@ final class Contact {
 		}
 		for (Url u : card.getUrls()) {
 			if (notBlank(u.getValue())) {
-				fields.add(new Field(Kind.LINK, label(u.getType(), "website"), u.getValue().trim(), true));
+				fields.add(new Field(Kind.LINK, label(u.getType(), tr("field.website")), u.getValue().trim(), true));
 			}
 		}
 		for (Address a : card.getAddresses()) {
@@ -113,17 +115,17 @@ final class Contact {
 		}
 		String birthday = birthday(card);
 		if (birthday != null) {
-			fields.add(new Field(Kind.BIRTHDAY, "birthday", birthday, false));
+			fields.add(new Field(Kind.BIRTHDAY, tr("field.birthday"), birthday, false));
 		}
 		if (card.getCategories() != null) {
 			String cats = joinValues(card.getCategories().getValues());
 			if (notBlank(cats)) {
-				fields.add(new Field(Kind.TAG, "tags", cats, false));
+				fields.add(new Field(Kind.TAG, tr("field.tags"), cats, false));
 			}
 		}
 		for (Note n : card.getNotes()) {
 			if (notBlank(n.getValue())) {
-				fields.add(new Field(Kind.NOTE, "note", n.getValue().trim(), true));
+				fields.add(new Field(Kind.NOTE, tr("field.note"), n.getValue().trim(), true));
 			}
 		}
 
@@ -150,7 +152,7 @@ final class Contact {
 		if (!card.getEmails().isEmpty() && notBlank(card.getEmails().get(0).getValue())) {
 			return card.getEmails().get(0).getValue().trim();
 		}
-		return "Unnamed contact";
+		return tr("contact.unnamed");
 	}
 
 	/** Job title and organisation, e.g. {@code "Engineer · Acme Corp"}. */
@@ -231,7 +233,7 @@ final class Contact {
 		Temporal date = bday.getDate();
 		if (date != null) {
 			try {
-				return DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH).format((TemporalAccessor) date);
+				return DateTimeFormatter.ofPattern("d MMM yyyy", Messages.locale()).format((TemporalAccessor) date);
 			} catch (Exception e) {
 				return date.toString();
 			}
@@ -267,9 +269,12 @@ final class Contact {
 
 	private static String prettyType(String raw) {
 		return switch (raw.toLowerCase(Locale.ROOT)) {
-			case "cell" -> "mobile";
-			case "voice" -> "phone";
-			case "pref" -> "preferred";
+			case "cell" -> tr("type.mobile");
+			case "voice" -> tr("type.phone");
+			case "pref" -> tr("type.preferred");
+			case "home" -> tr("type.home");
+			case "work" -> tr("type.work");
+			case "fax" -> tr("type.fax");
 			default -> raw.toLowerCase(Locale.ROOT);
 		};
 	}

@@ -1,5 +1,7 @@
 package dev.nuclr.plugin.core.quick.viewer.vcf;
 
+import static dev.nuclr.plugin.core.quick.viewer.vcf.Messages.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -100,7 +102,7 @@ public class VcfQuickViewPanel extends JPanel {
 	 */
 	public boolean load(NuclrResource item, AtomicBoolean cancelled) {
 		if (item.getLength() > MAX_FILE_SIZE) {
-			showMessage("“" + item.getName() + "” is too large to preview.", cancelled);
+			showMessage(tr("message.too.large", item.getName()), cancelled);
 			return true;
 		}
 
@@ -109,7 +111,7 @@ public class VcfQuickViewPanel extends JPanel {
 			cards = Ezvcard.parse(in).all();
 		} catch (Exception e) {
 			log.warn("Failed to parse vCard: {}", item.getName(), e);
-			showMessage("Could not read vCard: " + e.getMessage(), cancelled);
+			showMessage(tr("message.read.failed", e.getMessage()), cancelled);
 			return true;
 		}
 
@@ -117,7 +119,7 @@ public class VcfQuickViewPanel extends JPanel {
 			return false;
 		}
 		if (cards == null || cards.isEmpty()) {
-			showMessage("No contacts found in this file.", cancelled);
+			showMessage(tr("message.no.contacts"), cancelled);
 			return true;
 		}
 
@@ -324,9 +326,9 @@ public class VcfQuickViewPanel extends JPanel {
 	}
 
 	private static String summary(int shown, int total, String fileName) {
-		String count = shown == 1 ? "1 contact" : shown + " contacts";
+		String count = shown == 1 ? tr("summary.one.contact") : tr("summary.contacts", String.valueOf(shown));
 		if (total > shown) {
-			count += " (showing first " + shown + " of " + total + ")";
+			count += tr("summary.showing.first", String.valueOf(shown), String.valueOf(total));
 		}
 		return count + "  ·  " + fileName;
 	}

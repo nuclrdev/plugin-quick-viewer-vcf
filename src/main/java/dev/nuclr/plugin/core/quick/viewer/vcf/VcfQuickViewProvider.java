@@ -1,5 +1,7 @@
 package dev.nuclr.plugin.core.quick.viewer.vcf;
 
+import static dev.nuclr.plugin.core.quick.viewer.vcf.Messages.tr;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,6 +43,9 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 
 	@Override
 	public void preinit(NuclrPluginContext context) {
+		if (context != null) {
+			Messages.use(context.getLocale());
+		}
 		this.context = context;
 		applyTheme(context != null ? context.getTheme() : null);
 	}
@@ -158,7 +163,7 @@ public class VcfQuickViewProvider implements QuickViewNuclrPlugin {
 
 	@Override
 	public String getWindowTitle() {
-		return "Quick View: " + (currentResource != null ? currentResource.getName() : "");
+		return tr("window.title", currentResource != null ? currentResource.getName() : "");
 	}
 
 	// ── Plugin metadata ──────────────────────────────────────────────────────────
